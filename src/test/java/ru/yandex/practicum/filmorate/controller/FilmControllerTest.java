@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -18,7 +21,9 @@ public class FilmControllerTest {
     Film unnamed;
     Film overDescription;
     Film minusDur;
-    Film updateFilm;
+    Film changeFilm;
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
 
     @BeforeEach
     public void beforeEach() {
@@ -66,7 +71,7 @@ public class FilmControllerTest {
                 Duration.ofMinutes(-120)
         );
 
-        updateFilm = new Film(
+        changeFilm = new Film(
                 1,
                 "newFilm",
                 "New interesting Film",
@@ -85,29 +90,18 @@ public class FilmControllerTest {
         int size1 = filmController.getAllFilms().size();
         assertEquals(1, size1, "Отличается размер мапы");
 
+        assertEquals(1, validator.validate(unnamed).size());
+        assertEquals(1, validator.validate(overDescription).size());
+        assertEquals(1, validator.validate(minusDur).size());
+        assertEquals(1, validator.validate(unnamed).size());
+
         final ValidationException exception = assertThrows(
                 ValidationException.class,
 
-                () -> filmController.addFilm(unnamed));
+                () -> filmController.addFilm(oldFilm));
 
-        assertEquals("Название не может быть пустым",
+        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
                 exception.getMessage());
-
-        final ValidationException e = assertThrows(
-                ValidationException.class,
-
-                () -> filmController.addFilm(overDescription));
-
-        assertEquals("Максимальная длина описания — 200 символов",
-                e.getMessage());
-
-        final ValidationException ex = assertThrows(
-                ValidationException.class,
-
-                () -> filmController.addFilm(minusDur));
-
-        assertEquals("Продолжительность фильма должна быть положительной",
-                ex.getMessage());
 
     }
 
@@ -120,33 +114,22 @@ public class FilmControllerTest {
         int size1 = filmController.getAllFilms().size();
         assertEquals(1, size1, "Отличается размер мапы");
 
+        assertEquals(1, validator.validate(unnamed).size());
+        assertEquals(1, validator.validate(overDescription).size());
+        assertEquals(1, validator.validate(minusDur).size());
+        assertEquals(1, validator.validate(unnamed).size());
+
         final ValidationException exception = assertThrows(
                 ValidationException.class,
 
-                () -> filmController.updateFilm(unnamed));
+                () -> filmController.addFilm(oldFilm));
 
-        assertEquals("Название не может быть пустым",
+        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
                 exception.getMessage());
 
-        final ValidationException e = assertThrows(
-                ValidationException.class,
-
-                () -> filmController.updateFilm(overDescription));
-
-        assertEquals("Максимальная длина описания — 200 символов",
-                e.getMessage());
-
-        final ValidationException ex = assertThrows(
-                ValidationException.class,
-
-                () -> filmController.updateFilm(minusDur));
-
-        assertEquals("Продолжительность фильма должна быть положительной",
-                ex.getMessage());
-
-        filmController.updateFilm(updateFilm);
+        filmController.updateFilm(changeFilm);
         Film example = filmController.getAllFilms().get(0);
-        assertEquals(updateFilm, example, "Разные фильмы");
+        assertEquals(changeFilm, example, "Разные фильмы");
     }
 
     @Test

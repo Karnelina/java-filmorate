@@ -2,12 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import ru.yandex.practicum.filmorate.controller.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,23 +29,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/users")
-    public User create(@RequestBody User user) throws ValidationException {
+    @ResponseBody
+    public User create(@Valid @RequestBody User user) throws ValidationException {
         log.info("Получен запрос Post user.");
-
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("Введите корректный email");
-        }
-
-        if (user.getLogin().isBlank() || user.getLogin() == null) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
 
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        }
-
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
         }
 
         User client = User.builder()
@@ -59,32 +46,24 @@ public class UserController {
                 .build();
 
         if (users.containsKey(client.getId())) {
+            log.warn("Пользователь существует");
+
             throw new ValidationException("Пользователь существует");
         }
 
         users.put(client.getId(), client);
+        log.info("Добавлен {} клиент", client);
 
         return client;
     }
 
     @PutMapping(value = "/users")
+    @ResponseBody
     public User update(@Valid @RequestBody User user) throws ValidationException {
         log.info("Получен запрос Put user.");
 
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("Введите корректный email");
-        }
-
-        if (user.getLogin().isBlank() || user.getLogin() == null) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        }
-
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем");
         }
 
         if (users.containsKey(user.getId())) {
@@ -93,9 +72,13 @@ public class UserController {
             users.get(user.getId()).setName(user.getName());
             users.get(user.getId()).setBirthday(user.getBirthday());
 
+            log.info("Добавлен {} клиент", user);
+
             return user;
 
         } else {
+            log.warn("Такого id не существует");
+
             throw new ValidationException("Такого id не существует");
         }
     }

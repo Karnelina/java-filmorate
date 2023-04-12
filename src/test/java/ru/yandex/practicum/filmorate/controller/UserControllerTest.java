@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +22,8 @@ class UserControllerTest {
     User noNameUser;
     User wrongBirthdayUser;
     User updateUser;
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
 
     @BeforeEach
     public void beforeEach() {
@@ -101,42 +106,15 @@ class UserControllerTest {
         int size1 = userController.getAllUsers().size();
         assertEquals(1, size1, "Отличается размер мапы");
 
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-
-                () -> userController.create(noEmailUser1));
-
-        assertEquals("Введите корректный email",
-                exception.getMessage());
-
-        final ValidationException e = assertThrows(
-                ValidationException.class,
-
-                () -> userController.create(noEmailUser2));
-
-        assertEquals("Введите корректный email",
-                e.getMessage());
-
-        final ValidationException ex = assertThrows(
-                ValidationException.class,
-
-                () -> userController.create(noLoginUser));
-
-        assertEquals("Логин не может быть пустым и содержать пробелы",
-                ex.getMessage());
+        assertEquals(1, validator.validate(noEmailUser1).size());
+        assertEquals(1, validator.validate(noEmailUser2).size());
+        assertEquals(1, validator.validate(noLoginUser).size());
+        assertEquals(1, validator.validate(wrongBirthdayUser).size());
 
         userController.create(noNameUser);
         String login = noNameUser.getLogin();
         String name = noNameUser.getName();
         assertEquals(login, name);
-
-        final ValidationException ex2 = assertThrows(
-                ValidationException.class,
-
-                () -> userController.create(wrongBirthdayUser));
-
-        assertEquals("Дата рождения не может быть в будущем",
-                ex2.getMessage());
     }
 
     @Test
@@ -148,42 +126,15 @@ class UserControllerTest {
         int size1 = userController.getAllUsers().size();
         assertEquals(1, size1, "Отличается размер мапы");
 
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-
-                () -> userController.update(noEmailUser1));
-
-        assertEquals("Введите корректный email",
-                exception.getMessage());
-
-        final ValidationException e = assertThrows(
-                ValidationException.class,
-
-                () -> userController.update(noEmailUser2));
-
-        assertEquals("Введите корректный email",
-                e.getMessage());
-
-        final ValidationException ex = assertThrows(
-                ValidationException.class,
-
-                () -> userController.update(noLoginUser));
-
-        assertEquals("Логин не может быть пустым и содержать пробелы",
-                ex.getMessage());
+        assertEquals(1, validator.validate(noEmailUser1).size());
+        assertEquals(1, validator.validate(noEmailUser2).size());
+        assertEquals(1, validator.validate(noLoginUser).size());
+        assertEquals(1, validator.validate(wrongBirthdayUser).size());
 
         userController.create(noNameUser);
         String login = noNameUser.getLogin();
         String name = noNameUser.getName();
         assertEquals(login, name);
-
-        final ValidationException ex2 = assertThrows(
-                ValidationException.class,
-
-                () -> userController.update(wrongBirthdayUser));
-
-        assertEquals("Дата рождения не может быть в будущем",
-                ex2.getMessage());
 
         userController.update(updateUser);
         User example = userController.getAllUsers().get(0);
