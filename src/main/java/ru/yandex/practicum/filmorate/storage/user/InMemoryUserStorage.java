@@ -68,13 +68,19 @@ public class InMemoryUserStorage implements UserStorage {
 
     public Collection<User> getUsersByIds(Collection<Long> ids) {
         List<User> result = new ArrayList<>();
-        for (long id : ids) {
-            if (!users.containsKey(id)) {
+        for (long userID : ids) {
+            if (!users.containsKey(userID)) {
                 throw new UserNotFoundException("Такого id не существует");
             }
-            result.add(users.get(id));
+            result.add(users.get(userID));
         }
         return result;
+    }
+
+    public void deleteUser(long id) {
+        log.info("Удаление пользователя {}", id);
+
+        users.remove(id);
     }
 
 }

@@ -15,7 +15,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserControllerTest {
 
@@ -34,7 +34,7 @@ class UserControllerTest {
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
         userService = new UserService(filmStorage, userStorage);

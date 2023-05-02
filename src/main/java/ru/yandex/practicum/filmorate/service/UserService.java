@@ -72,4 +72,8 @@ public class UserService {
     private static <T> Set<T> findCommonElements(Collection<T> first, Collection<T> second) {
         return first.stream().filter(second::contains).collect(Collectors.toSet());
     }
+
+    public void deleteUser(long id) {
+        userStorage.deleteUser(id);
+    }
 }

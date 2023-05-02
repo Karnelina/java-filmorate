@@ -63,4 +63,8 @@ public class FilmService {
                 .collect(Collectors.toSet());
     }
 
+    public void deleteFilm(long id) {
+        filmStorage.deleteFilm(id);
+    }
+
 }

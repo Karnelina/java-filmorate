@@ -8,7 +8,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -73,4 +75,8 @@ public class FilmController {
         return filmService.getMostPopularFilms(10);
     }
 
+    @DeleteMapping("/films/{id}/delete")
+    public void deleteFilm(@PathVariable("id") long id) {
+        filmService.deleteFilm(id);
+    }
 }

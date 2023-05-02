@@ -8,7 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -77,4 +78,8 @@ public class UserController {
         return userService.getCommonFriends(userId, otherId);
     }
 
+    @DeleteMapping("/users/{id}/delete")
+    public void deleteFilm(@PathVariable("id") long id) {
+        userService.deleteUser(id);
+    }
 }

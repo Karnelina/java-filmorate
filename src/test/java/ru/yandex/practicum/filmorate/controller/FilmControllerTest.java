@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -17,9 +16,10 @@ import javax.validation.ValidatorFactory;
 import java.time.Duration;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FilmControllerTest {
+class FilmControllerTest {
     FilmController filmController;
     FilmService filmService;
     FilmStorage filmStorage;
@@ -34,7 +34,7 @@ public class FilmControllerTest {
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
         filmService = new FilmService(filmStorage, userStorage);
@@ -93,7 +93,7 @@ public class FilmControllerTest {
 
 
     @Test
-    public void addFilm() throws ValidationException {
+    void addFilm() throws ValidationException {
         int size = filmController.getAllFilms().size();
         assertEquals(0, size, "Not null size");
 

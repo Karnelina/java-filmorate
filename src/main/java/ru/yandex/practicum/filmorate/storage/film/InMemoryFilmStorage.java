@@ -73,4 +73,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
+
+    public void deleteFilm(long id) {
+        log.info("Удаление фильма {}", id);
+
+        films.remove(id);
+    }
 }

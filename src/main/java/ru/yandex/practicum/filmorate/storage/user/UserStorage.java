@@ -16,4 +16,6 @@ public interface UserStorage {
     List<User> getAllUsers();
 
     Collection<User> getUsersByIds(Collection<Long> ids) throws ValidationException;
+
+    void deleteUser(long id);
 }
