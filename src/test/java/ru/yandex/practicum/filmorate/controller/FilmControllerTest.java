@@ -2,9 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import ru.yandex.practicum.filmorate.controller.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -12,10 +16,14 @@ import javax.validation.ValidatorFactory;
 import java.time.Duration;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FilmControllerTest {
+class FilmControllerTest {
     FilmController filmController;
+    FilmService filmService;
+    FilmStorage filmStorage;
+    UserStorage userStorage;
     Film film1;
     Film oldFilm;
     Film unnamed;
@@ -26,11 +34,14 @@ public class FilmControllerTest {
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void beforeEach() {
-        filmController = new FilmController();
+    void beforeEach() {
+        filmStorage = new InMemoryFilmStorage();
+        userStorage = new InMemoryUserStorage();
+        filmService = new FilmService(filmStorage, userStorage);
+        filmController = new FilmController(filmService);
 
         film1 = new Film(
-                1,
+                1L,
                 "Film",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
@@ -38,7 +49,7 @@ public class FilmControllerTest {
         );
 
         oldFilm = new Film(
-                2,
+                2L,
                 "Old Film",
                 "Old Film",
                 LocalDate.of(1895, 12, 24),
@@ -46,7 +57,7 @@ public class FilmControllerTest {
         );
 
         unnamed = new Film(
-                3,
+                3L,
                 "",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
@@ -54,7 +65,7 @@ public class FilmControllerTest {
         );
 
         overDescription = new Film(
-                4,
+                4L,
                 "Film",
                 "Interesting Film jffokjfojjnjfgohgoidfosiegoiegosidjgosiegoisegofieoighosiegefglkjdlfkjd " +
                         "doifjoifgoisjdoiajofoasijdpioasjopfijoihfgohoaijsdf[j{Dfj[DIjfoigjh[oidjgoijdogjdfkdokfjdfdf" +
@@ -64,7 +75,7 @@ public class FilmControllerTest {
         );
 
         minusDur = new Film(
-                5,
+                5L,
                 "Film",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
@@ -72,7 +83,7 @@ public class FilmControllerTest {
         );
 
         changeFilm = new Film(
-                1,
+                1L,
                 "newFilm",
                 "New interesting Film",
                 LocalDate.of(2020, 10, 10),
@@ -82,7 +93,7 @@ public class FilmControllerTest {
 
 
     @Test
-    public void addFilm() throws ValidationException {
+    void addFilm() throws ValidationException {
         int size = filmController.getAllFilms().size();
         assertEquals(0, size, "Not null size");
 
