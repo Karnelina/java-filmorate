@@ -70,9 +70,9 @@ public class FilmController {
     public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Optional<Integer> count) {
         log.info("Получен запрос Get most popular films.");
         if (count.isPresent()) {
-            return filmService.getMostPopularFilms(count.get());
+            return filmService.getMostfilmLike(count.get());
         }
-        return filmService.getMostPopularFilms(10);
+        return filmService.getMostfilmLike(10);
     }
 
     @DeleteMapping("/films/{id}/delete")

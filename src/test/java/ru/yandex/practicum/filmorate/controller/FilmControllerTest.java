@@ -45,7 +45,8 @@ class FilmControllerTest {
                 "Film",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
-                Duration.ofMinutes(120)
+                Duration.ofMinutes(120),
+                "G"
         );
 
         oldFilm = new Film(
@@ -53,7 +54,8 @@ class FilmControllerTest {
                 "Old Film",
                 "Old Film",
                 LocalDate.of(1895, 12, 24),
-                Duration.ofMinutes(60)
+                Duration.ofMinutes(60),
+                "G"
         );
 
         unnamed = new Film(
@@ -61,7 +63,8 @@ class FilmControllerTest {
                 "",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
-                Duration.ofMinutes(120)
+                Duration.ofMinutes(120),
+                "G"
         );
 
         overDescription = new Film(
@@ -71,7 +74,8 @@ class FilmControllerTest {
                         "doifjoifgoisjdoiajofoasijdpioasjopfijoihfgohoaijsdf[j{Dfj[DIjfoigjh[oidjgoijdogjdfkdokfjdfdf" +
                         "fhjoksdjokdjfoksjdfoijdflksdjfosidjfosijdfosjdfosidjfosidjfosidfjosidjfsodifjsodfosidjfosijdf",
                 LocalDate.of(2022, 12, 20),
-                Duration.ofMinutes(120)
+                Duration.ofMinutes(120),
+                "G"
         );
 
         minusDur = new Film(
@@ -79,7 +83,8 @@ class FilmControllerTest {
                 "Film",
                 "Interesting Film",
                 LocalDate.of(2022, 12, 20),
-                Duration.ofMinutes(-120)
+                Duration.ofMinutes(-120),
+                "G"
         );
 
         changeFilm = new Film(
@@ -87,7 +92,8 @@ class FilmControllerTest {
                 "newFilm",
                 "New interesting Film",
                 LocalDate.of(2020, 10, 10),
-                Duration.ofMinutes(30)
+                Duration.ofMinutes(30),
+                "G"
         );
     }
 

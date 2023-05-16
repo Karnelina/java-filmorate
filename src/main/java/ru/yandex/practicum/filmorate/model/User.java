@@ -22,6 +22,7 @@ public class User {
     @PastOrPresent
     LocalDate birthday;
     Set<Long> friendsId = new HashSet<>();
+    boolean friendApprove;
 
     public User(Long id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
@@ -31,8 +32,11 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void setFriendsId(Long friendsId) {
-        this.friendsId.add(friendsId);
+    public void setFriendsId(Long friendsId, boolean approve) {
+        friendApprove = approve;
+        if (friendApprove) {
+            this.friendsId.add(friendsId);
+        }
     }
 
 }
