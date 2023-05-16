@@ -45,8 +45,8 @@ public class UserService {
         User user = userStorage.getUser(userId);
         User friend = userStorage.getUser(friendId);
 
-        user.setFriendsId(friend.getId());
-        friend.setFriendsId(user.getId());
+        user.setFriendsId(friend.getId(), true);
+        friend.setFriendsId(user.getId(), true);
     }
 
     public void deleteFriend(long userId, long friendId) throws ValidationException {

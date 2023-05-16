@@ -41,7 +41,7 @@ public class FilmService {
         User user = userStorage.getUser(idUser);
         Film film = filmStorage.getFilm(idFilm);
 
-        film.setPopularFilms(user.getId());
+        film.setfilmLike(user.getId());
 
         return film;
     }
@@ -50,11 +50,11 @@ public class FilmService {
         User user = userStorage.getUser(idUser);
         Film film = filmStorage.getFilm(idFilm);
 
-        film.getPopularFilms().remove(user.getId());
+        film.getFilmLike().remove(user.getId());
     }
 
     public Collection<Film> getMostPopularFilms(int count) {
-        Comparator<Film> comparator = Comparator.comparingInt(f -> f.getPopularFilms().size());
+        Comparator<Film> comparator = Comparator.comparingInt(f -> f.getFilmLike().size());
         return filmStorage
                 .getAllFilms()
                 .stream()
