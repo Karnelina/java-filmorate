@@ -59,4 +59,4 @@
 
 ### Схема базы данных
 
-![filmorate_diagram](https://github.com/Karnelina/java-filmorate/assets/103586369/41555d28-fb48-4835-a9a9-f6c0b84777fa)
+![filmorate_diagram](https://github.com/Karnelina/java-filmorate/assets/103586369/ba81d5b6-0c74-4b0a-a12b-ebd544075e3e)
