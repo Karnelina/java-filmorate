@@ -3,64 +3,62 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import org.springframework.util.CollectionUtils;
+import ru.yandex.practicum.filmorate.dao.FilmGenreDao;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
 
-    public Film addFilm(Film film) throws ValidationException {
-        return filmStorage.addFilm(film);
-    }
+    private final FilmGenreDao filmGenreDao;
 
-    public Film updateFilm(Film film) throws ValidationException {
-        return filmStorage.updateFilm(film);
-    }
-
-    public List<Film> getAllFilms() {
-        return filmStorage.getAllFilms();
-    }
-
-    public Film getFilm(long idFilm) {
-        return filmStorage.getFilm(idFilm);
-    }
-
-    public Film addLike(long idFilm, long idUser) throws ValidationException {
-        User user = userStorage.getUser(idUser);
-        Film film = filmStorage.getFilm(idFilm);
-
-        film.setfilmLike(user.getId());
-
+    public Film getFilmById(long filmId) {
+        Film film = filmStorage.getFilmById(filmId).orElseThrow(FilmNotFoundException::new);
+        log.info("Получен фильм id = " + filmId);
         return film;
     }
 
-    public void deleteLike(long idFilm, long idUser) throws ValidationException {
-        User user = userStorage.getUser(idUser);
-        Film film = filmStorage.getFilm(idFilm);
-
-        film.getFilmLike().remove(user.getId());
+    public Collection<Film> getFilms() {
+        Collection<Film> films = filmStorage.getAllFilms();
+        if (CollectionUtils.isEmpty(films)) {
+            log.info("Получены фильмы: " + films);
+            return films;
+        }
+        log.info("Получен пустой список фильмов");
+        return new ArrayList<>(films);
     }
 
-    public Collection<Film> getMostPopularFilms(int count) {
-        Comparator<Film> comparator = Comparator.comparingInt(f -> f.getFilmLike().size());
-        return filmStorage
-                .getAllFilms()
-                .stream()
-                .sorted(comparator.reversed())
-                .limit(count)
-                .collect(Collectors.toSet());
+    public Film updateFilm(Film film) {
+        if (!isExist(film.getId())) {
+            log.error("Ошибка, фильм не найден: " + film);
+            throw new FilmNotFoundException();
+        }
+        return filmStorage.updateFilm(film).get();
+    }
+
+    public Film createFilm(Film film) {
+        filmStorage.createFilm(film);
+        if (!CollectionUtils.isEmpty(film.getGenres())) {
+            for (Genre genre : film.getGenres()) {
+                filmGenreDao.linkGenreToFilm(film.getId(), genre.getId());
+            }
+        }
+
+        log.info("Фильм {} создан.", film.getName());
+        return film;
+    }
+
+    private boolean isExist(long id) {
+        return filmStorage.getFilmById(id).isPresent();
     }
 
     public void deleteFilm(long id) {

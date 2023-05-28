@@ -1,48 +1,42 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.time.DurationMin;
+import ru.yandex.practicum.filmorate.validation.After;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.PositiveOrZero;
-import java.time.Duration;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 public class Film {
-    @PositiveOrZero
-    Long id;
+
+    @Positive
+    private Long id;
+
     @NotBlank
-    String name;
+    private String name;
+
     @Length(max = 200)
-    String description;
-    @PastOrPresent
-    LocalDate releaseDate;
-    @DurationMin(nanos = 1)
-    Duration duration;
-    Set<Long> filmLike = new HashSet<>();
-    Collection<String> genre = new ArrayList<>();
-    @NotBlank
-    @NotEmpty
-    String ageLimitCode;
+    private String description;
 
-    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration, String ageLimitCode) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.ageLimitCode = ageLimitCode;
-    }
+    @After("1895-12-28")
+    private LocalDate releaseDate;
 
-    public void setfilmLike(Long userId) {
-        this.filmLike.add(userId);
-    }
+    @Positive
+    private int duration;
+
+    private MpaRating mpa;
+
+    private List<Long> likes = new ArrayList<>();
+
+    private List<Genre> genres;
+
 }
