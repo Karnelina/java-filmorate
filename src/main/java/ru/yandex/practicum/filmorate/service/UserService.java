@@ -1,76 +1,65 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class UserService {
-    FilmStorage filmStorage;
-    UserStorage userStorage;
+    private final UserStorage userStorage;
 
-    @Autowired
-    public UserService(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
+    public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    public User create(User user) {
-        return userStorage.create(user);
+    public User getUserById(long userId) {
+        if (!isExist(userId)) {
+            log.error("Ошибка, пользователь не существует: " + userId);
+            throw new UserNotFoundException("Пользователь не существует");
+        }
+
+        User user = userStorage.getUserById(userId).orElseThrow(UserNotFoundException::new);
+        log.info("Получен пользователь: " + user);
+        return user;
     }
 
-    public User update(User user) throws ValidationException {
-        return userStorage.update(user);
+    public User createUser(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+
+        User newUser = userStorage.create(user);
+        log.info("Создан пользователь: " + newUser);
+        return user;
     }
 
-    public List<User> getAllUsers() {
-        return userStorage.getAllUsers();
+    public User updateUser(User user) {
+        if (!isExist(user.getId())) {
+            log.error("Ошибка, пользователь не существует: " + user);
+            throw new UserNotFoundException("Пользователь не существует");
+        }
+        userStorage.update(user);
+        log.info("Обновлен пользователь: " + user);
+        return user;
     }
 
-    public User getUser(long id) throws ValidationException {
-        return userStorage.getUser(id);
+    public Collection<User> getUsers() {
+        Collection<User> users = userStorage.getUsers();
+        log.info("Получены пользователи: " + users);
+        return users;
     }
 
-    public void addFriend(long userId, long friendId) throws ValidationException {
-        User user = userStorage.getUser(userId);
-        User friend = userStorage.getUser(friendId);
-
-        user.setFriendsId(friend.getId(), true);
-        friend.setFriendsId(user.getId(), true);
+    private boolean isExist(long userId) {
+        return userStorage.getUserById(userId).isPresent();
     }
 
-    public void deleteFriend(long userId, long friendId) throws ValidationException {
-        User user = userStorage.getUser(userId);
-        User friend = userStorage.getUser(friendId);
-
-        user.getFriendsId().remove(friend.getId());
-        friend.getFriendsId().remove(user.getId());
-    }
-
-    public Collection<User> getUserFriends(long id) throws ValidationException {
-            User userFriends = userStorage.getUser(id);
-            return userStorage.getUsersByIds(userFriends.getFriendsId());
-    }
-
-    public Collection<User> getCommonFriends(long userId, long otherId) throws ValidationException {
-        User user1 = userStorage.getUser(userId);
-        User user2 = userStorage.getUser(otherId);
-        Set<Long> commonFriendIds = findCommonElements(user1.getFriendsId(), user2.getFriendsId());
-        return userStorage.getUsersByIds(commonFriendIds);
-    }
-
-    private static <T> Set<T> findCommonElements(Collection<T> first, Collection<T> second) {
-        return first.stream().filter(second::contains).collect(Collectors.toSet());
+    public Collection<User> getUsersByIds(Collection<Long> ids) {
+        return userStorage.getUsersByIds(ids);
     }
 
     public void deleteUser(long id) {
