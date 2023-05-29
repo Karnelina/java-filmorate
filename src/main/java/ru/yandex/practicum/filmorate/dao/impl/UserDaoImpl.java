@@ -56,7 +56,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Collection<User> getAllUsers() {
-        String sqlToUserTable = "select * from USERS";
+        String sqlToUserTable = "SELECT * FROM USERS";
         return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs))
                 .stream()
                 .filter(Objects::nonNull)
@@ -65,7 +65,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> getUserById(long id) {
-        String sqlToUserTable = "select * from USERS where USER_ID = ? ";
+        String sqlToUserTable = "SELECT * FROM USERS WHERE USER_ID = ? ";
         return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs), id)
                 .stream()
                 .filter(Objects::nonNull)
@@ -89,7 +89,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteUser(long id) {
-        String deleteSQL = "delete from USERS where USER_ID = ?";
+        String deleteSQL = "DELETE FROM USERS WHERE USER_ID = ?";
         this.jdbcTemplate.update(deleteSQL, id);
     }
 

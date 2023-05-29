@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.constant.MpaRatingConstant;
 import ru.yandex.practicum.filmorate.dao.MpaRatingDao;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
@@ -15,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.MpaRatingConstant.ID;
+import static ru.yandex.practicum.filmorate.constant.MpaRatingConstant.NAME;
 
 @Slf4j
 @Component
@@ -27,7 +27,7 @@ public class MpaRatingDaoImpl implements MpaRatingDao {
 
     @Override
     public List<MpaRating> getMpaRatings() {
-        String sqlToMpaRatingTable = "select * from MPA_RATING";
+        String sqlToMpaRatingTable = "SELECT * FROM MPA_RATING";
         return jdbcTemplate.query(sqlToMpaRatingTable, (rs, rowNum) -> mapToMpaRating(rs))
                 .stream()
                 .filter(Objects::nonNull)
@@ -36,7 +36,7 @@ public class MpaRatingDaoImpl implements MpaRatingDao {
 
     @Override
     public Optional<MpaRating> getMpaRatingById(long id) {
-        String sqlToMpaRatingTable = "select * from MPA_RATING where RATING_ID = ? ";
+        String sqlToMpaRatingTable = "SELECT * FROM MPA_RATING WHERE RATING_ID = ? ";
         return jdbcTemplate.query(sqlToMpaRatingTable, (rs, rowNum) -> mapToMpaRating(rs), id)
                 .stream()
                 .filter(Objects::nonNull)
@@ -46,6 +46,6 @@ public class MpaRatingDaoImpl implements MpaRatingDao {
     private MpaRating mapToMpaRating(ResultSet rs) throws SQLException {
         return new MpaRating(
                 rs.getLong(ID),
-                rs.getString(MpaRatingConstant.NAME));
+                rs.getString(NAME));
     }
 }

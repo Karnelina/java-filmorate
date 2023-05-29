@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,18 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FilmLikeService {
     private final FilmLikeDbStorage filmLikeStorage;
 
     private final FilmStorage filmStorage;
 
     private final UserService userService;
-
-    public FilmLikeService(FilmLikeDbStorage filmLikeStorage, FilmStorage filmStorage, UserService userService) {
-        this.filmLikeStorage = filmLikeStorage;
-        this.filmStorage = filmStorage;
-        this.userService = userService;
-    }
 
     public void createLike(long filmId, long userId) {
         filmLikeStorage.createLike(FilmLike.builder()

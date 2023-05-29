@@ -82,7 +82,7 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public void deleteFilm(long id) {
-        String deleteSQL = "delete from FILMS where FILM_ID = ?";
+        String deleteSQL = "DELETE FROM FILMS WHERE FILM_ID = ?";
         this.jdbcTemplate.update(deleteSQL, id);
     }
 
@@ -123,7 +123,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     private Optional<MpaRating> getMpaRatingById(long id) {
-        String sqlToMpaRatingTable = "select * from MPA_RATING where RATING_ID = ? ";
+        String sqlToMpaRatingTable = "SELECT * FROM MPA_RATING WHERE RATING_ID = ? ";
         return jdbcTemplate.query(sqlToMpaRatingTable, (rs, rowNum) -> mapToMpaRating(rs), id)
                 .stream()
                 .filter(Objects::nonNull)

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Friendship;
@@ -13,15 +14,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FriendshipService {
     private final FriendshipStorage friendshipStorage;
 
     private final UserService userService;
-
-    public FriendshipService(FriendshipStorage friendshipStorage, UserService userService) {
-        this.friendshipStorage = friendshipStorage;
-        this.userService = userService;
-    }
 
     public Collection<Long> getFriendIdsByUserId(long userId) {
         Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);

@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dao.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.constant.GenreConstant;
 import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -13,6 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ru.yandex.practicum.filmorate.constant.GenreConstant.ID;
+import static ru.yandex.practicum.filmorate.constant.GenreConstant.NAME;
 
 @Slf4j
 @Component
@@ -54,8 +56,8 @@ public class GenreDaoImpl implements GenreDao {
 
     private Genre mapToGenre(ResultSet rs) throws SQLException {
         return Genre.builder()
-                .id(rs.getLong(GenreConstant.ID))
-                .name(rs.getString(GenreConstant.NAME))
+                .id(rs.getLong(ID))
+                .name(rs.getString(NAME))
                 .build();
     }
 }
