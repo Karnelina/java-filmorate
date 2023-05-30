@@ -1,6 +1,10 @@
 package ru.yandex.practicum.filmorate.constant;
 
 public class FilmConstant {
+
+    private FilmConstant() {
+    }
+
     public static final String FILM_TABLE = "FILMS";
     public static final String ID = "FILM_ID";
     public static final String NAME = "NAME";

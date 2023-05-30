@@ -36,7 +36,7 @@ public class FriendshipDbStorageTests {
     Friendship friendship;
 
     @BeforeEach
-    public void init() {
+    protected void init() {
         user = User.builder()
                 .id(1L)
                 .name("name")
@@ -67,7 +67,7 @@ public class FriendshipDbStorageTests {
     }
 
     @Test
-    public void createFriendshipTest() {
+    protected void testCreateFriendshipTest() {
         Optional<Friendship> friendship1 = Optional.ofNullable(friendshipStorage.createFriendship(friendship));
         assertThat(friendship1)
                 .isPresent()
@@ -75,7 +75,7 @@ public class FriendshipDbStorageTests {
     }
 
     @Test
-    public void deleteFriendshipTest() {
+    protected void testDeleteFriendshipTest() {
         Optional<Friendship> friendship1 = Optional.ofNullable(friendshipStorage.createFriendship(friendship));
         assertThat(friendship1)
                 .isPresent()
@@ -87,7 +87,7 @@ public class FriendshipDbStorageTests {
     }
 
     @Test
-    public void getFriendIdsByUserIdTest() {
+    protected void testGetFriendIdsByUserIdTest() {
         assertEquals(0, friendshipStorage.getFriendIdsByUserId(1).size());
 
         Optional<Friendship> friendship1 = Optional.ofNullable(friendshipStorage.createFriendship(friendship));

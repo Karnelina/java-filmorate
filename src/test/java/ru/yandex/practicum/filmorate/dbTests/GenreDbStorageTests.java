@@ -31,7 +31,7 @@ public class GenreDbStorageTests {
 
 
     @Test
-    public void getGenreByIdTest() {
+    protected void testGetGenreByIdTest() {
         Optional<Genre> genre = genreStorage.getGenreById(1);
         assertThat(genre)
                 .isPresent()
@@ -39,7 +39,7 @@ public class GenreDbStorageTests {
     }
 
     @Test
-    public void getGenresTest() {
+    protected void testGetGenresTest() {
         Optional<Genre> genre = genreStorage.getGenres().stream().findFirst();
         assertThat(genre)
                 .isPresent()
@@ -47,7 +47,7 @@ public class GenreDbStorageTests {
     }
 
     @Test
-    public void getGenresByFilmIdTest() {
+    protected void testGetGenresByFilmIdTest() {
         Film film = Film.builder()
                 .id(1L)
                 .name("name")

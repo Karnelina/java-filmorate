@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -54,15 +54,12 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Optional<Integer> count) {
-        if (count.isPresent()) {
-            return filmLikeService.getMostPopularFilms(count.get());
-        }
-        return filmLikeService.getMostPopularFilms(10);
+    public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Integer count) {
+        return filmLikeService.getMostPopularFilms(Objects.requireNonNullElse(count, 10));
     }
 
-    @DeleteMapping("/films/{id}/delete")
-    public void deleteFilm(@PathVariable("id") long id) {
+    @DeleteMapping("/{id}/delete")
+    public void deleteFilm(@PathVariable long id) {
         filmService.deleteFilm(id);
     }
 }

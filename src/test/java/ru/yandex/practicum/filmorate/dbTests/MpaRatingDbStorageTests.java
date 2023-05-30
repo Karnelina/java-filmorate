@@ -23,7 +23,7 @@ public class MpaRatingDbStorageTests {
     private final MpaRatingStorage mpaRatingStorage;
 
     @Test
-    public void testFindAllGpaRatings() {
+    protected void testFindAllGpaRatings() {
         Optional<Collection<MpaRating>> mpaOptional = Optional.ofNullable(mpaRatingStorage.getMpaRatings());
         assertThat(mpaOptional)
                 .isPresent()
@@ -31,7 +31,7 @@ public class MpaRatingDbStorageTests {
     }
 
     @Test
-    public void testGetRatingById() {
+    protected void testGetRatingById() {
         Optional<MpaRating> mpaOptional = mpaRatingStorage.getMpaRatingById(1);
         assertThat(mpaOptional)
                 .isPresent()

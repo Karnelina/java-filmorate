@@ -29,7 +29,7 @@ public class FilmDbStorageTests {
     Film film;
 
     @BeforeEach
-    public void init() {
+    protected void init() {
         film = Film.builder()
                 .id(1L)
                 .name("name")
@@ -46,7 +46,7 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    public void createFilmTest() {
+    protected void testCreateFilmTest() {
         Optional<Film> film1 = filmStorage.createFilm(film);
 
         assertThat(film1)
@@ -55,7 +55,7 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    public void getFilmsTest() {
+    protected void testGetFilmsTest() {
         filmStorage.createFilm(film);
         Optional<Film> film1 = filmStorage.getAllFilms().stream().findFirst();
 
@@ -65,7 +65,7 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    public void updateFilmTest() {
+    protected void testUpdateFilmTest() {
         filmStorage.createFilm(film);
 
         Film updatedFilm = Film.builder()
@@ -88,7 +88,7 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    public void getFilmByIdTest() {
+    protected void testGetFilmByIdTest() {
         filmStorage.createFilm(film);
         assertEquals(film.getId(), filmStorage.getFilmById(film.getId()).get().getId());
     }

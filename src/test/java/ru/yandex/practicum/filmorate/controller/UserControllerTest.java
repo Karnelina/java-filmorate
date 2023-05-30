@@ -28,7 +28,7 @@ class UserControllerTest {
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void setUp() {
+    protected void setUp() {
         user = User.builder()
                 .id(1L)
                 .name("name")
@@ -40,71 +40,71 @@ class UserControllerTest {
     }
 
     @Test
-    public void idMissedTest() {
+    protected void idMissedTest() {
         assertThrows(NullPointerException.class, () -> userController.updateUser(user));
     }
 
     @Test
-    public void emailWithoutAtTest() {
+    protected void emailWithoutAtTest() {
         user.setEmail("mail.ru");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "Правильный емаил");
     }
 
     @Test
-    public void blankEmailTest() {
+    protected void blankEmailTest() {
         user.setEmail(" ");
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size(), "Правильный емаил");
     }
 
     @Test
-    public void nullEmailTest() {
+    protected void nullEmailTest() {
         user.setEmail(null);
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "Правильный емаил");
     }
 
     @Test
-    public void blankLoginTest() {
+    protected void blankLoginTest() {
         user.setLogin("");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "Логин не пустой");
 
         user.setLogin(" ");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "Логин не пустой");
     }
 
     @Test
-    public void nullLoginTest() {
+    protected void nullLoginTest() {
         user.setLogin(null);
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "Логин не пустой");
     }
 
     @Test
-    public void nullNameTest() {
+    protected void nullNameTest() {
         user.setName(null);
-        assertEquals(user.getLogin(), "login");
+        assertEquals(user.getLogin(), "login", "Имя другое");
     }
 
     @Test
-    public void blankNameTest() {
+    protected void blankNameTest() {
         user.setName("");
-        assertEquals(user.getLogin(), "login");
+        assertEquals(user.getLogin(), "login", "Имя другое");
 
         user.setName(" ");
-        assertEquals(user.getLogin(), "login");
+        assertEquals(user.getLogin(), "login", "Имя другое");
     }
 
     @Test
-    public void birthdayInFutureTest() {
+    protected void birthdayInFutureTest() {
         user.setBirthday(LocalDate.parse("20-08-2446", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size(), "День рождение в норме");
     }
 
     @Test
-    public void nullRequestTest() {
+    protected void nullRequestTest() {
         assertThrows(NullPointerException.class, () -> userController.createUser(null));
     }
 
     @Test
-    public void negativeIdTest() {
+    protected void negativeIdTest() {
         user.setId(-1L);
         assertEquals(1, validator.validate(user).size());
     }

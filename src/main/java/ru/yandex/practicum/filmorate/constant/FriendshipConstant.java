@@ -1,6 +1,10 @@
 package ru.yandex.practicum.filmorate.constant;
 
 public class FriendshipConstant {
+
+    private FriendshipConstant() {
+    }
+
     public static final String FRIENDSHIP_TABLE = "FRIENDS";
     public static final String ID = "FRIENDS_ID";
     public static final String USER_ID = "USER_ID";

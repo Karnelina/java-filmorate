@@ -42,7 +42,7 @@ public class FilmLikeDbStorageTests {
     private User user;
 
     @BeforeEach
-    public void init() {
+    protected void init() {
         filmLike = FilmLike.builder()
                 .filmId(1)
                 .userId(1)
@@ -76,7 +76,7 @@ public class FilmLikeDbStorageTests {
     }
 
     @Test
-    public void createLikeTest() {
+    protected void testCreateLikeTest() {
         Optional<FilmLike> filmLike1 = Optional.ofNullable(filmLikeStorage.createLike(filmLike));
         assertThat(filmLike1)
                 .isPresent()
@@ -84,7 +84,7 @@ public class FilmLikeDbStorageTests {
     }
 
     @Test
-    public void getFilmLikesTest() {
+    protected void testGetFilmLikesTest() {
         filmLikeStorage.createLike(filmLike);
         Optional<FilmLike> like = filmLikeStorage.getFilmLikes(1).stream().findFirst();
 
@@ -94,7 +94,7 @@ public class FilmLikeDbStorageTests {
     }
 
     @Test
-    public void unlikeTest() {
+    protected void testUnlikeTest() {
         filmLikeStorage.createLike(filmLike);
         Optional<FilmLike> like = filmLikeStorage.getFilmLikes(1).stream().findFirst();
 

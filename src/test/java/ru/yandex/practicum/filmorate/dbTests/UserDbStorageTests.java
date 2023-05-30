@@ -30,7 +30,7 @@ public class UserDbStorageTests {
     private User user;
 
     @BeforeEach
-    public void init() {
+    protected void init() {
         user = User.builder()
                 .id(1L)
                 .name("name")
@@ -42,13 +42,13 @@ public class UserDbStorageTests {
     }
 
     @Test
-    public void createUserTest() {
+    protected void testCreateUserTest() {
         Optional<User> user1 = Optional.of(userStorage.create(user));
-        assertNotNull(user.getId());
+        assertNotNull(user1, "Юзер не создан");
     }
 
     @Test
-    public void updateUserTest() {
+    protected void testUpdateUserTest() {
         userStorage.create(user);
         User updatedUser = User.builder()
                 .id(1L)
@@ -60,17 +60,19 @@ public class UserDbStorageTests {
                 .build();
 
         userStorage.update(updatedUser);
-        assertEquals("updatedName", userStorage.getUserById(updatedUser.getId()).get().getName());
+        assertEquals("updatedName", userStorage.getUserById(updatedUser.getId()).get().getName(),
+                "Юзер не обновлен");
     }
 
     @Test
-    public void getUserByIdTest() {
+    protected void testGetUserByIdTest() {
         userStorage.create(user);
-        assertEquals(user.getId(), userStorage.getUserById(user.getId()).get().getId());
+        assertEquals(user.getId(), userStorage.getUserById(user.getId()).get().getId(),
+                "Получить юзера не удалось");
     }
 
     @Test
-    public void getUsersTest() {
+    protected void testGetUsersTest() {
         userStorage.create(user);
         Optional<User> user1 = userStorage.getUsers().stream().findFirst();
 
@@ -80,7 +82,7 @@ public class UserDbStorageTests {
     }
 
     @Test
-    public void getUsersByIdsTest() {
+    protected void testGetUsersByIdsTest() {
         userStorage.create(user);
         Optional<User> user1 = userStorage.getUsersByIds(Set.of(1L)).stream().findFirst();
 

@@ -1,6 +1,10 @@
 package ru.yandex.practicum.filmorate.constant;
 
 public class UserConstant {
+
+    private UserConstant() {
+    }
+
     public static final String USER_TABLE = "USERS";
     public static final String ID = "USER_ID";
     public static final String EMAIL = "EMAIL";

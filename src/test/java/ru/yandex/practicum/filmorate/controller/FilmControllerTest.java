@@ -28,7 +28,7 @@ class FilmControllerTest {
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void setUp() {
+    protected void setUp() {
         film = Film.builder()
                 .id(1L)
                 .name("name")
@@ -45,24 +45,24 @@ class FilmControllerTest {
     }
 
     @Test
-    public void nullRequestTest() {
-        Film film = null;
-        assertThrows(NullPointerException.class, () -> filmController.createFilm(film));
+    protected void nullRequestTest() {
+        film = null;
+        assertThrows(NullPointerException.class, () -> filmController.createFilm(film), "Фильм существует");
     }
 
     @Test
-    public void idMissedTest() {
-        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film));
+    protected void idMissedTest() {
+        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film), "Фильм существует");
     }
 
     @Test
-    public void blankNameTest() {
+    protected void blankNameTest() {
         film.setName(null);
         assertEquals(1, validator.validate(film).size());
     }
 
     @Test
-    public void nullNameTest() {
+    protected void nullNameTest() {
         film.setName("");
         assertEquals(1, validator.validate(film).size());
 
@@ -71,7 +71,7 @@ class FilmControllerTest {
     }
 
     @Test
-    public void moreThanTwoHundredCharactersDescriptionTest() {
+    protected void moreThanTwoHundredCharactersDescriptionTest() {
         film.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
@@ -81,20 +81,21 @@ class FilmControllerTest {
     }
 
     @Test
-    public void releaseDateIsBefore28_1895Test() {
+    protected void releaseDateIsBefore28_1895Test() {
         film.setReleaseDate(LocalDate.parse("28-12-1894", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film));
+        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film),
+                "Фильм создан после 28.12.1895");
     }
 
     @Test
-    public void negativeDurationTest() {
+    protected void negativeDurationTest() {
         film.setDuration(-200);
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size(), "Длительность положительная");
     }
 
     @Test
-    public void negativeIdTest() {
+    protected void negativeIdTest() {
         film.setId(-1L);
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size(), "Айди положительное");
     }
 }

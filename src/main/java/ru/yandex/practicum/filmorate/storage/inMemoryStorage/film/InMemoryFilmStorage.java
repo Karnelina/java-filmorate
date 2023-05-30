@@ -14,10 +14,10 @@ import java.util.Map;
 
 @Repository
 @Slf4j
-public class InMemoryInMemFilmStorage implements InMemFilmStorage {
+public class InMemoryFilmStorage implements InMemFilmStorage {
 
     private final Map<Long, Film> films = new HashMap<>();
-    long id = 0L;
+    private long id;
 
     private Long countId() {
         return ++id;

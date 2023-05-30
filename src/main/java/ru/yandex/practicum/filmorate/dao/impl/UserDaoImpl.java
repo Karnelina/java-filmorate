@@ -44,7 +44,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> update(User user) {
-        jdbcTemplate.update("UPDATE USERS SET USER_ID = ?, EMAIL = ?, LOGIN = ?, NAME = ?, BIRTHDAY = ? where USER_ID = ? ",
+        jdbcTemplate.update("UPDATE USERS SET USER_ID = ?, EMAIL = ?, LOGIN = ?, NAME = ?, BIRTHDAY = ? "
+                + "where USER_ID = ?",
                 user.getId(),
                 user.getEmail(),
                 user.getLogin(),

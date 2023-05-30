@@ -49,8 +49,8 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public Optional<Film> updateFilm(Film film) {
         String sql =
-                "UPDATE FILMS SET FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, MPA_RATING_ID = ?"
-                        + " WHERE FILM_ID = ? ";
+                "UPDATE FILMS SET FILM_ID = ?, NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, "
+                        + "MPA_RATING_ID = ? WHERE FILM_ID = ? ";
         jdbcTemplate.update(sql,
                 film.getId(),
                 film.getName(),
