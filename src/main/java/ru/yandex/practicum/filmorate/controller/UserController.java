@@ -1,81 +1,65 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
 
-    UserService userService;
+    private final FriendshipService friendshipService;
 
-    @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
-    @GetMapping("/users")
-    public List<User> getAllUsers() {
-        log.info("Получен запрос Get users.");
-        return userService.getAllUsers();
+    @PostMapping()
+    public User createUser(@Valid @RequestBody User user) {
+        return userService.createUser(user);
     }
 
-    @PostMapping(value = "/users")
-    public User create(@Valid @RequestBody User user) throws ValidationException {
-        log.info("Получен запрос Post user.");
-
-        return userService.create(user);
+    @PutMapping()
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
     }
 
-    @PutMapping(value = "/users")
-    public User update(@Valid @RequestBody User user) throws ValidationException {
-        log.info("Получен запрос Put user.");
-
-        return userService.update(user);
+    @GetMapping("/{userId}")
+    public User getUserById(@Valid @PathVariable long userId) {
+        return userService.getUserById(userId);
     }
 
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUser(id);
+    @GetMapping()
+    public Collection<User> getUsers() {
+        return userService.getUsers();
     }
 
-    @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") long userId,
-                          @PathVariable("friendId") long friendId) throws ValidationException {
-        log.info("Получен запрос Put friend.");
-
-        userService.addFriend(userId, friendId);
-
-        log.info("Друг добавлен" + friendId);
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.addFriend(userId, friendId);
     }
 
-    @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") long userId,
-                             @PathVariable("friendId") long friendId) throws ValidationException {
-        log.info("Получен запрос Delete friend.");
-
-        userService.deleteFriend(userId, friendId);
-
-        log.info("Друг удален.");
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void unfriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.unfriend(userId, friendId);
     }
 
-    @GetMapping("/users/{id}/friends")
-    public Collection<User> getUserFriends(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUserFriends(id);
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@Valid @PathVariable long userId, @PathVariable long otherId) {
+        return friendshipService.getCommonFriends(userId, otherId);
     }
 
-    @GetMapping("/users/{id}/friends/common/{otherId}")
-    public Collection<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) throws ValidationException {
-        log.info("Получен запрос Get common friends.");
-        return userService.getCommonFriends(userId, otherId);
+    @GetMapping("/{userId}/friends")
+    public Collection<User> getFriendsByUserId(@Valid @PathVariable long userId) {
+        return friendshipService.getFriendsByUserId(userId);
     }
 
     @DeleteMapping("/users/{id}/delete")

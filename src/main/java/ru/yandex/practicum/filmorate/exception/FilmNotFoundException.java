@@ -9,4 +9,8 @@ public class FilmNotFoundException extends RuntimeException {
         super(message);
     }
 
+    public FilmNotFoundException() {
+        super();
+    }
+
 }
