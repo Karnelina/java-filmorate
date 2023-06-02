@@ -61,3 +61,164 @@
 
 ![filmorate_dia](https://github.com/Karnelina/java-filmorate/assets/103586369/c63f9114-44d2-4e1e-aabd-1650f5b7d2fd)
 
+### Примеры запросов:
+
+
+
+
+1. Пользователи
+
+
+Создание пользователя
+
+ ```sql
+ INSERT INTO USERS (NAME, EMAIL, LOGIN, BIRTHDAY)
+ VALUES ( ?, ?, ?, ? );
+ ```
+
+Редактирование пользователя
+
+ ```sql
+ UPDATE USERS
+ SET EMAIL = ?,
+     LOGIN = ?,
+     NAME = ?,
+     BIRTHDAY = ?
+ WHERE USER_ID = ?
+ ```
+
+Получение списка всех пользователей
+
+ ```sql
+ SELECT *
+ FROM USERS
+ ```
+Получение информации о пользователе по его id
+
+ ```sql
+ SELECT *
+ FROM USERS
+ WHERE USER_ID = ?
+ ```
+
+Добавление в друзья
+
+ ```sql
+ INSERT INTO FRIENDS (USER_ID, FRIEND_ID, STATUS)
+ VALUES (?, ?, ?)
+ ```
+
+Удаление из друзей
+
+ ```sql
+ DELETE
+ FROM FRIENDS
+ WHERE USER_ID = ? AND FRIEND_ID = ?
+ ```
+
+Возвращает список пользователей, являющихся его друзьями
+ ```sql
+ SELECT ut.*
+ FROM FRIENDS AS fst
+ INNER JOIN USERS AS ut ON ut.USER_ID = fst.FRIEND_ID
+ WHERE fst.USER_ID = ?
+ ```
+
+Список друзей, общих с другим пользователем
+
+ ```sql
+ SELECT ut.*
+ FROM USERS AS ut
+ INNER JOIN FRIENDS AS fst ON ut.USER_ID = fst.FRIEND_ID
+ WHERE ut.USER_ID = ?
+
+ INTERSECT
+
+ SELECT ut.*
+ FROM USERS as ut
+ INNER JOIN FRIENDS as fst ON ut.USER_ID = fst.FRIEND_ID
+ WHERE fst.USER_ID = ?
+ ```
+
+Удаляет пользователя
+```sql
+DELETE 
+FROM USERS 
+WHERE USER_ID = ?
+```
+
+2. Фильмы
+
+Создание фильма
+
+ ```sql
+ INSERT INTO FILMS (NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_RATING_ID)
+ VALUES (?, ?, ?, ?, ?)
+ ```
+
+Редактирование фильма
+
+ ```sql
+ UPDATE FILMS
+ SET NAME = ?,
+     DESCRIPTION = ?,
+     RELEASE_DATE = ?,
+     DURATION = ?,
+     MPA_RATING_ID = ?
+ WHERE FILM_ID = ?
+ ```
+
+Получение списка всех фильмов
+
+ ```sql
+ SELECT ft.*, mpt.NAME, COUNT(flt.USER_ID) AS rate
+ FROM FILMS AS ft
+ LEFT JOIN MPA_RATING AS mpt ON ft.MPA_RATING_ID = mpt.RATING_ID
+ LEFT JOIN FILM_LIKE AS flt ON ft.FILM_ID = flt.FILM_ID
+ GROUP BY ft.FILM_ID
+ ORDER BY ft.FILM_ID
+ ```
+
+Получение информации о фильме по его id
+
+ ```sql
+ SELECT ft.*, mpt.NAME, COUNT(flt.USER_ID) AS rate
+ FROM FILMS AS ft
+ LEFT JOIN MPA_RATING AS mpt ON ft.MPA_RATING_ID = mpt.RATING_ID
+ LEFT JOIN FILM_LIKE AS flt ON ft.FILM_ID = flt.FILM_ID
+ WHERE ft.FILM_ID = 2
+ GROUP BY ft.FILM_ID
+ ```
+
+Пользователь ставит лайк фильму
+
+  ```sql
+ INSERT INTO FILM_LIKE (FILM_ID, USER_ID)
+ VALUES (?, ?)
+  ```
+
+Пользователь удаляет лайк
+
+  ```sql
+ DELETE
+ FROM FILM_LIKE
+ WHERE FILM_ID = ? AND USER_ID = ?
+  ```
+
+Возвращает список из первых count фильмов по количеству лайков
+ ```sql
+SELECT ft.*, mpt.NAME, COUNT(flt.USER_ID) AS rate
+FROM FILMS AS ft
+LEFT JOIN MPA_RATING AS mpt ON ft.MPA_RATING_ID = mpt.RATING_ID
+LEFT JOIN FILM_LIKE AS flt ON ft.FILM_ID = flt.FILM_ID
+GROUP BY ft.FILM_ID
+ORDER BY rate DESC, ft.FILM_ID
+LIMIT ?
+ ```
+
+Удаляет фильм 
+```sql
+DELETE 
+FROM FILMS 
+WHERE FILM_ID = ?
+```
