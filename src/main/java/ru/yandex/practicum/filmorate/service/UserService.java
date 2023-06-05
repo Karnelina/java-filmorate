@@ -52,7 +52,7 @@ public class UserService {
         return users;
     }
 
-    private boolean isExist(long userId) {
+    protected boolean isExist(long userId) {
         return userStorage.getUserById(userId).isPresent();
     }
 
