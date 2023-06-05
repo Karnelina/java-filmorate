@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ru.yandex.practicum.filmorate.dao.UserDao;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
@@ -45,7 +47,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> update(User user) {
         jdbcTemplate.update("UPDATE USERS SET USER_ID = ?, EMAIL = ?, LOGIN = ?, NAME = ?, BIRTHDAY = ? "
-                + "where USER_ID = ?",
+                        + "where USER_ID = ?",
                 user.getId(),
                 user.getEmail(),
                 user.getLogin(),
