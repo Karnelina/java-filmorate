@@ -46,17 +46,21 @@ public class RecommendationsDaoImpl implements RecommendationsDao {
                 actualFilms.retainAll(userFavoriteFilms);
                 coincidences.put(entry.getKey(), actualFilms.size());
             }
-            userIdWithMaxCoincidences = Collections.max(coincidences.entrySet(), Map.Entry.comparingByValue()).getKey();
+            if (!coincidences.isEmpty()) {
+                userIdWithMaxCoincidences = Collections.max(coincidences.entrySet(), Map.Entry.comparingByValue()).getKey();
+            }
         }
-        List<Integer> recommendations = actualUsersAndFilms.get(userIdWithMaxCoincidences);
-        recommendations.removeAll(userFavoriteFilms);
+        List<Integer> recommendations = new ArrayList<>();
+        if (actualUsersAndFilms.get(userIdWithMaxCoincidences) != null && !actualUsersAndFilms.get(userIdWithMaxCoincidences).isEmpty()) {
+            recommendations = actualUsersAndFilms.get(userIdWithMaxCoincidences);
+            recommendations.removeAll(userFavoriteFilms);
+        }
         return recommendations;
     }
 
     @Override
     public Collection<Film> getUserRecommendations(long id) {
         List<Integer> recommendationsIds = getRecommendationsIds(id);
-        List<Film> recommendations = filmDao.getFilmsInIds(recommendationsIds);
-        return recommendations;
+        return filmDao.getFilmsInIds(recommendationsIds);
     }
 }
