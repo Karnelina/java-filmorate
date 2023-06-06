@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.recommendations.RecommendationStorage;
@@ -67,11 +68,11 @@ public class UserService {
         userStorage.deleteUser(id);
     }
 
-    public void getRecommendationsForUser(long id) {
+    public Collection<Film> getRecommendationsForUser(long id) {
         if (!isExist(id)) {
             log.error("Ошибка, пользователь не существует: " + id);
             throw new UserNotFoundException("Пользователь не существует");
         }
-        recommendationStorage.getUserRecommendations(id);
+        return recommendationStorage.getUserRecommendations(id);
     }
 }

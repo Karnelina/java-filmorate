@@ -10,13 +10,14 @@ import java.util.*;
 public class RecommendationsDaoImpl implements RecommendationsDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final FilmDaoImpl filmDao;
 
-    public RecommendationsDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RecommendationsDaoImpl(JdbcTemplate jdbcTemplate, FilmDaoImpl filmDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.filmDao = filmDao;
     }
 
-    @Override
-    public Collection<Film> getUserRecommendations(long id) {
+    private List<Integer> getRecommendationsIds(long id) {
         String getUsersAndLikes = "SELECT USER_ID, GROUP_CONCAT(DISTINCT FILM_ID ORDER BY FILM_ID ASC SEPARATOR ',') AS FILMS " +
                 "FROM FILM_LIKE " +
                 "GROUP BY USER_ID";
@@ -49,6 +50,13 @@ public class RecommendationsDaoImpl implements RecommendationsDao {
         }
         List<Integer> recommendations = actualUsersAndFilms.get(userIdWithMaxCoincidences);
         recommendations.removeAll(userFavoriteFilms);
-        return new ArrayList<>();
+        return recommendations;
+    }
+
+    @Override
+    public Collection<Film> getUserRecommendations(long id) {
+        List<Integer> recommendationsIds = getRecommendationsIds(id);
+        List<Film> recommendations = filmDao.getFilmsInIds(recommendationsIds);
+        return recommendations;
     }
 }
