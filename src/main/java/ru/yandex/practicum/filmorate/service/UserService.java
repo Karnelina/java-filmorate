@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.recommendations.RecommendationStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
