@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -61,5 +63,12 @@ public class FilmController {
     @DeleteMapping("/{id}/delete")
     public void deleteFilm(@PathVariable long id) {
         filmService.deleteFilm(id);
+    }
+
+    @GetMapping("/films/popular?count={limit}&genreId={genreId}&year={year}")
+    public Collection<Film> getMostPopularFilmsByParams(@Positive @RequestParam(defaultValue = "10") Integer limit,
+                                                        @Positive @RequestParam(required = false) Long genreId,
+                                                        @PastOrPresent @RequestParam(required = false) Integer year) {
+        return filmLikeService.getMostPopularFilmsByParams(limit, genreId, year);
     }
 }

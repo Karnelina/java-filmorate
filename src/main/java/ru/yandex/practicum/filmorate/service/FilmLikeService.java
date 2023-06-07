@@ -8,9 +8,7 @@ import ru.yandex.practicum.filmorate.model.FilmLike;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.filmLike.FilmLikeDbStorage;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +49,14 @@ public class FilmLikeService {
                 })
                 .sorted(comparator.reversed())
                 .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<Film> getMostPopularFilmsByParams(Integer limit, Long genreId, Integer year) {
+        return filmStorage.getAllFilms()
+                .stream()
+                .filter(film -> film.getReleaseDate().getYear() == year && film.getGenres().contains(genreId))
+                .limit(limit)
                 .collect(Collectors.toList());
     }
 }
