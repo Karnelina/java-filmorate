@@ -72,6 +72,8 @@ public class UserService {
             log.error("Ошибка, пользователь не существует: " + id);
             throw new UserNotFoundException("Пользователь не существует");
         }
-        return recommendationStorage.getUserRecommendations(id);
+        Collection<Film> recommendations = recommendationStorage.getUserRecommendations(id);
+        log.info("Запрошен список рекомендаций фильмов для пользователя с id: " + id + System.lineSeparator() + recommendations);
+        return recommendations;
     }
 }
