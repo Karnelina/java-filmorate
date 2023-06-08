@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.genre.GenreDbStorage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,9 @@ public class FilmDbStorage implements FilmStorage {
                 filmGenreDao.linkGenreToFilm(film.getId(), genre.getId());
             }
         }
-
+        if (CollectionUtils.isEmpty(film.getDirectors())) {
+            film.setDirectors(new ArrayList<>());
+        }
         film.setGenres((List<Genre>) genreStorage.getGenresByFilmId(film.getId()));
         log.info("Обновлен фильм: " + film);
         return Optional.of(film);

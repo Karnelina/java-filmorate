@@ -7,9 +7,8 @@ import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -55,6 +54,21 @@ public class FilmController {
         filmLikeService.unlike(filmId, userId);
     }
 
+    @GetMapping(value = "/popular", params = {"genreId", "year"})
+    public Collection<Film> getMostPopularFilmsByParams(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
+    }
+
+    @GetMapping(value = "/popular", params = {"year"})
+    public Collection<Film> getMostPopularFilmsByYears(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
+    }
+
+    @GetMapping(value = "/popular", params = {"genreId"})
+    public Collection<Film> getMostPopularFilmsByGenre(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
+    }
+
     @GetMapping("/popular")
     public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Integer count) {
         return filmLikeService.getMostPopularFilms(Objects.requireNonNullElse(count, 10));
@@ -65,10 +79,5 @@ public class FilmController {
         filmService.deleteFilm(id);
     }
 
-    @GetMapping("/films/popular?count={limit}&genreId={genreId}&year={year}")
-    public Collection<Film> getMostPopularFilmsByParams(@Positive @RequestParam(defaultValue = "10") Integer limit,
-                                                        @Positive @RequestParam(required = false) Long genreId,
-                                                        @PastOrPresent @RequestParam(required = false) Integer year) {
-        return filmLikeService.getMostPopularFilmsByParams(limit, genreId, year);
-    }
+
 }

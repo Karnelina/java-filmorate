@@ -96,6 +96,7 @@ public class FilmDaoImpl implements FilmDao {
                 .mpa(getMpaRatingById(filmRows.getLong(MPA_RATING_ID)).orElseThrow(MpaRatingNotFoundException::new))
                 .likes(new ArrayList<>())
                 .genres(getGenresByFilmId(filmRows.getLong(ID)))
+                .directors(new ArrayList<>())
                 .build();
     }
 
