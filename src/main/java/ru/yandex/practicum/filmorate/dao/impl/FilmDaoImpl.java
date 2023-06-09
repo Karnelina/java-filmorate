@@ -174,4 +174,15 @@ public class FilmDaoImpl implements FilmDao {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    public List<Film> getFilmsInIds(List<Integer> filmIds) {
+        String inSql = String.join(",", Collections.nCopies(filmIds.size(), "?"));
+        String selectCurrentFilms = "SELECT * FROM FILMS WHERE FILM_ID IN (%s)";
+        List<Film> recommendedFilms = new ArrayList<>();
+        if (!filmIds.isEmpty()) {
+            recommendedFilms = jdbcTemplate.query(String.format(selectCurrentFilms, inSql), filmIds.toArray(), (rs, rowNum) -> mapToFilm(rs));
+        }
+        return recommendedFilms;
+    }
+
 }
