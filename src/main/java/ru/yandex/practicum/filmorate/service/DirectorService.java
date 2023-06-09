@@ -29,7 +29,7 @@ public class DirectorService {
             return directors;
         }
         log.info("Получен пустой список фильмов");
-        return new ArrayList<>(directors);
+        return new ArrayList<>();
     }
 
     public Director updateDirector(Director director) {

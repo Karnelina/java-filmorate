@@ -75,7 +75,7 @@ public class FilmService {
             return films;
         }
         log.info("Получен пустой список фильмов");
-        return new ArrayList<>(films);
+        return new ArrayList<>();
     }
 
     public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
@@ -85,6 +85,6 @@ public class FilmService {
             return films;
         }
         log.info("Получен пустой список фильмов");
-        return new ArrayList<>(films);
+        return new ArrayList<>();
     }
 }
