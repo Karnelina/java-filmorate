@@ -82,4 +82,9 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> getFilmsDirectorSorted(Integer directorId, String sortBy) {
         return filmDao.getFilmsDirectorSorted(directorId, sortBy);
     }
+
+    @Override
+    public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
+        return filmDao.searchPopularFilmsByDirectorAndTitle(query, by);
+    }
 }

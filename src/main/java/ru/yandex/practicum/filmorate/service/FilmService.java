@@ -77,4 +77,14 @@ public class FilmService {
         log.info("Получен пустой список фильмов");
         return new ArrayList<>(films);
     }
+
+    public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
+        Collection<Film> films = filmStorage.searchPopularFilmsByDirectorAndTitle(query, by);
+        if (CollectionUtils.isEmpty(films)) {
+            log.info("Получены фильмы: " + films);
+            return films;
+        }
+        log.info("Получен пустой список фильмов");
+        return new ArrayList<>(films);
+    }
 }
