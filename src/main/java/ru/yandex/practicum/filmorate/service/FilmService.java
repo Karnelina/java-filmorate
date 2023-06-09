@@ -70,7 +70,7 @@ public class FilmService {
 
     public Collection<Film> getFilmsDirector(Integer directorId, String sortBy) {
         Collection<Film> films = filmStorage.getFilmsDirectorSorted(directorId, sortBy);
-        if (CollectionUtils.isEmpty(films)) {
+        if (!CollectionUtils.isEmpty(films)) {
             log.info("Получены фильмы: " + films);
             return films;
         }

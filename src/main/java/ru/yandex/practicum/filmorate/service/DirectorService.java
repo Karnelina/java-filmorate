@@ -24,7 +24,7 @@ public class DirectorService {
 
     public Collection<Director> getDirectors() {
         Collection<Director> directors = directorStorage.getAllDirectors();
-        if (CollectionUtils.isEmpty(directors)) {
+        if (!CollectionUtils.isEmpty(directors)) {
             log.info("Получены режиссёры: " + directors);
             return directors;
         }
