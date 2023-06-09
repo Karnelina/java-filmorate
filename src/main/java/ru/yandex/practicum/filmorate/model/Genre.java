@@ -11,6 +11,7 @@ import javax.validation.constraints.Positive;
 @Setter
 @ToString
 @Builder
+@EqualsAndHashCode
 public class Genre {
 
     @Positive

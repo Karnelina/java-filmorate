@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -55,6 +56,21 @@ public class FilmController {
     @DeleteMapping("/{filmId}/like/{userId}")
     public void unlike(@PathVariable long filmId, @PathVariable long userId) {
         filmLikeService.unlike(filmId, userId);
+    }
+
+    @GetMapping(value = "/popular", params = {"genreId", "year"})
+    public Collection<Film> getMostPopularFilmsByParams(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
+    }
+
+    @GetMapping(value = "/popular", params = {"year"})
+    public Collection<Film> getMostPopularFilmsByYears(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
+    }
+
+    @GetMapping(value = "/popular", params = {"genreId"})
+    public Collection<Film> getMostPopularFilmsByGenre(@RequestParam Map<String, String> params) {
+        return filmLikeService.getMostPopularFilmsByParams(params);
     }
 
     @GetMapping("/popular")
