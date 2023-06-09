@@ -63,7 +63,7 @@ public class UserController {
         return friendshipService.getFriendsByUserId(userId);
     }
 
-    @DeleteMapping("/users/{id}/delete")
+    @DeleteMapping("/{id}")
     public void deleteFilm(@PathVariable("id") long id) {
         userService.deleteUser(id);
     }
