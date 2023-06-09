@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -80,7 +81,7 @@ public class FilmService {
 
     public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
         Collection<Film> films = filmStorage.searchPopularFilmsByDirectorAndTitle(query, by);
-        if (CollectionUtils.isEmpty(films)) {
+        if (!CollectionUtils.isEmpty(films)) {
             log.info("Получены фильмы: " + films);
             return films;
         }
