@@ -24,12 +24,12 @@ public class DirectorService {
 
     public Collection<Director> getDirectors() {
         Collection<Director> directors = directorStorage.getAllDirectors();
-        if (CollectionUtils.isEmpty(directors)) {
+        if (!CollectionUtils.isEmpty(directors)) {
             log.info("Получены режиссёры: " + directors);
             return directors;
         }
         log.info("Получен пустой список фильмов");
-        return new ArrayList<>(directors);
+        return new ArrayList<>();
     }
 
     public Director updateDirector(Director director) {

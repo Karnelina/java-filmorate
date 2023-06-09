@@ -21,6 +21,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
+import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_TITLE;
+import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_DIRECTOR;
+import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_DIRECTOR_TITLE;
+import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_TITLE_DIRECTOR;
 
 @Slf4j
 @Component
@@ -185,4 +189,39 @@ public class FilmDaoImpl implements FilmDao {
         return recommendedFilms;
     }
 
+    @Override
+    public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
+        Collection<Film> films;
+        String sqlToFilmTable = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.mpa_rating_id " +
+                "FROM (SELECT f.*, d.name AS director_name " +
+                "FROM films AS f " +
+                "LEFT JOIN film_like AS l ON f.film_id = l.film_id " +
+                "LEFT JOIN films_directors AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN directors AS d ON fd.director_id = d.director_id " +
+                "GROUP BY f.film_id, d.name " +
+                "ORDER BY count(DISTINCT l.user_id) DESC) AS f ";
+        if (query.isEmpty()) {
+            films = jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> FilmDaoImpl.this.mapToFilm(rs));
+        } else {
+            query = String.format("%s%s%s", "%", query.toLowerCase(), "%");
+            switch (by.toLowerCase()) {
+                case SEARCH_TITLE:
+                    sqlToFilmTable = sqlToFilmTable + "WHERE LOWER(name) LIKE ?";
+                    films = jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> FilmDaoImpl.this.mapToFilm(rs), query);
+                    break;
+                case SEARCH_DIRECTOR:
+                    sqlToFilmTable = sqlToFilmTable + "WHERE LOWER(director_name) LIKE ?";
+                    films = jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> FilmDaoImpl.this.mapToFilm(rs), query);
+                    break;
+                case SEARCH_TITLE_DIRECTOR:
+                case SEARCH_DIRECTOR_TITLE:
+                    sqlToFilmTable = sqlToFilmTable + "WHERE LOWER(name) LIKE ? OR LOWER(director_name) LIKE ?";
+                    films = jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> FilmDaoImpl.this.mapToFilm(rs), query, query);
+                    break;
+                default:
+                    films = jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> FilmDaoImpl.this.mapToFilm(rs));
+            }
+        }
+        return films.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
 }
