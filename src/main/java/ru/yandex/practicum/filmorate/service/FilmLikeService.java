@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmLike;
+import ru.yandex.practicum.filmorate.storage.dbStorage.event.EventStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.filmLike.FilmLikeDbStorage;
 
@@ -22,11 +23,14 @@ public class FilmLikeService {
 
     private final UserService userService;
 
+    private final EventStorage eventStorage;
+
     public void createLike(long filmId, long userId) {
         filmLikeStorage.createLike(FilmLike.builder()
                 .filmId(filmId)
                 .userId(userId)
                 .build());
+        eventStorage.addEvent(userId, filmId, "LIKE", "ADD");
     }
 
     public void unlike(long filmId, long userId) {
@@ -35,6 +39,7 @@ public class FilmLikeService {
                 .filmId(filmId)
                 .userId(userId)
                 .build());
+        eventStorage.addEvent(userId, filmId, "LIKE", "REMOVE");
     }
 
     public Collection<Film> getMostPopularFilms(int count) {

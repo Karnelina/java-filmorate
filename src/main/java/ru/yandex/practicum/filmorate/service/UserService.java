@@ -4,16 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.dbStorage.event.EventStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
+    private final EventStorage eventStorage;
 
     public User getUserById(long userId) {
         if (!isExist(userId)) {
@@ -62,5 +66,9 @@ public class UserService {
 
     public void deleteUser(long id) {
         userStorage.deleteUser(id);
+    }
+
+    public List<Event> getEvents(long id){
+        return eventStorage.getEvents(id);
     }
 }

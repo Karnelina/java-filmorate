@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.dbStorage.event.EventStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.friendship.FriendshipStorage;
 
 import java.util.Collection;
@@ -20,6 +21,8 @@ public class FriendshipService {
 
     private final UserService userService;
 
+    private final EventStorage eventStorage;
+
     public Collection<Long> getFriendIdsByUserId(long userId) {
         Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
 
@@ -32,6 +35,7 @@ public class FriendshipService {
     public Friendship addFriend(long userId, long friendId) {
         userService.getUserById(userId);
         userService.getUserById(friendId);
+        eventStorage.addEvent(userId, friendId, "FRIEND", "ADD");
         return friendshipStorage.createFriendship(Friendship.builder()
                 .userId(userId)
                 .friendId(friendId)
@@ -43,6 +47,7 @@ public class FriendshipService {
                 .userId(userId)
                 .friendId(friendId)
                 .build());
+        eventStorage.addEvent(userId, friendId, "FRIEND", "REMOVE");
     }
 
     public Collection<User> getCommonFriends(long userId1, long userId2) {
