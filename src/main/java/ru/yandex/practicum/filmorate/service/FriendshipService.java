@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.friendship.FriendshipStorage;
@@ -44,9 +45,12 @@ public class FriendshipService {
     }
 
     public Collection<User> getFriendsByUserId(long userId) {
-        Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
+        if (userService.isExist(userId)) {
+            Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
 
-        return userService.getUsersByIds(friends);
+            return userService.getUsersByIds(friends);
+        }
+        throw new UserNotFoundException("Пользователь не существует");
     }
 
     protected static <T> Set<T> getCommonElements(Set<T> first, Set<T> second) {

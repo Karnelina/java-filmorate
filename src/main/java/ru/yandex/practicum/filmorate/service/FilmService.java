@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import ru.yandex.practicum.filmorate.dao.FilmDirectorDao;
 import ru.yandex.practicum.filmorate.dao.FilmGenreDao;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -20,6 +21,7 @@ public class FilmService {
     private final FilmStorage filmStorage;
 
     private final FilmGenreDao filmGenreDao;
+    private final FilmDirectorDao filmDirectorDao;
 
     public Film getFilmById(long filmId) {
         Film film = filmStorage.getFilmById(filmId).orElseThrow(FilmNotFoundException::new);
@@ -52,7 +54,9 @@ public class FilmService {
                 filmGenreDao.linkGenreToFilm(film.getId(), genre.getId());
             }
         }
-
+        if (!CollectionUtils.isEmpty(film.getDirectors())) {
+            filmDirectorDao.linkDirectorToFilm(film);
+        }
         log.info("Фильм {} создан.", film.getName());
         return film;
     }
@@ -70,4 +74,23 @@ public class FilmService {
         filmStorage.deleteFilm(id);
     }
 
+    public Collection<Film> getFilmsDirector(Integer directorId, String sortBy) {
+        Collection<Film> films = filmStorage.getFilmsDirectorSorted(directorId, sortBy);
+        if (!CollectionUtils.isEmpty(films)) {
+            log.info("Получены фильмы: " + films);
+            return films;
+        }
+        log.info("Получен пустой список фильмов");
+        return new ArrayList<>();
+    }
+
+    public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
+        Collection<Film> films = filmStorage.searchPopularFilmsByDirectorAndTitle(query, by);
+        if (!CollectionUtils.isEmpty(films)) {
+            log.info("Получены фильмы: " + films);
+            return films;
+        }
+        log.info("Получен пустой список фильмов");
+        return new ArrayList<>();
+    }
 }

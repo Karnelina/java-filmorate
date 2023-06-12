@@ -18,4 +18,9 @@ public interface FilmDao {
     void deleteFilm(long id);
 
     Set<Film> getFilmsIdsByUserId(long userId, long friendId);
+
+    Collection<Film> getFilmsDirectorSorted(Integer directorId, String sortBy);
+
+    Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by);
+
 }

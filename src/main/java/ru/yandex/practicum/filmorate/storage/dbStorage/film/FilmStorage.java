@@ -18,4 +18,8 @@ public interface FilmStorage {
     void deleteFilm(long id);
 
     Set<Film> getCommonFilms(long userId, long friendId);
+
+    Collection<Film> getFilmsDirectorSorted(Integer directorId, String sortBy);
+
+    Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by);
 }
