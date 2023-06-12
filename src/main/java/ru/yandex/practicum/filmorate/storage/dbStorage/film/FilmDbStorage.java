@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.storage.dbStorage.genre.GenreDbStorage;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Primary
@@ -64,4 +65,13 @@ public class FilmDbStorage implements FilmStorage {
     public void deleteFilm(long id) {
         filmDao.deleteFilm(id);
     }
+
+    @Override
+    public Set<Film> getCommonFilms(long userId, long friendId) {
+        Set<Film> films = filmDao.getFilmsIdsByUserId(userId, friendId);
+
+        log.info("Количество фильмов: " + films.size());
+        return films;
+    }
+
 }

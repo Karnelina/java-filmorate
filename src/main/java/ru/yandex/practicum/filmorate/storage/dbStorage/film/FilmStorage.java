@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 public interface FilmStorage {
     Collection<Film> getAllFilms();
@@ -15,4 +16,6 @@ public interface FilmStorage {
     Optional<Film> getFilmById(long id);
 
     void deleteFilm(long id);
+
+    Set<Film> getCommonFilms(long userId, long friendId);
 }

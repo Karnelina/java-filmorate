@@ -86,26 +86,6 @@ public class FilmDaoImpl implements FilmDao {
         this.jdbcTemplate.update(deleteSQL, id);
     }
 
-    private Film mapToFilm(ResultSet filmRows) throws SQLException {
-        return Film.builder()
-                .id(filmRows.getLong(ID))
-                .name(filmRows.getString(NAME))
-                .description(filmRows.getString(DESCRIPTION))
-                .releaseDate(filmRows.getDate(RELEASE_DATE).toLocalDate())
-                .duration(filmRows.getInt(DURATION))
-                .mpa(getMpaRatingById(filmRows.getLong(MPA_RATING_ID)).orElseThrow(MpaRatingNotFoundException::new))
-                .likes(new ArrayList<>())
-                .genres(getGenresByFilmId(filmRows.getLong(ID)))
-                .build();
-    }
-
-    private Genre mapToGenre(ResultSet genreRows) throws SQLException {
-        return Genre.builder()
-                .id(genreRows.getLong(GenreConstant.ID))
-                .name(genreRows.getString(GenreConstant.NAME))
-                .build();
-    }
-
     private List<Genre> getGenresByFilmId(long filmId) {
         String sqlToGenreTable = "SELECT gt.GENRE_ID, gt.NAME FROM GENRE AS gt " +
                 "JOIN GENRE_ID AS gid ON gid.GENRE_ID = gt.GENRE_ID " +
@@ -128,6 +108,44 @@ public class FilmDaoImpl implements FilmDao {
                 .stream()
                 .filter(Objects::nonNull)
                 .findFirst();
+    }
+
+    @Override
+    public Set<Film> getFilmsIdsByUserId(long userId, long friendId) {
+        String sqlToFilmsTable = "SELECT f.*\n" +
+                "FROM FILMS AS f\n" +
+                "WHERE f.FILM_ID IN (\n" +
+                "    SELECT FILM_ID\n" +
+                "    FROM FILM_LIKE AS fl\n" +
+                "    WHERE fl.USER_ID = ? OR fl.USER_ID = ?\n" +
+                "    GROUP BY fl.FILM_ID\n" +
+                "    HAVING COUNT(fl.FILM_ID) > 1\n" +
+                "    ORDER BY COUNT(fl.FILM_ID) DESC)";
+
+        return jdbcTemplate.query(sqlToFilmsTable, (rs, rowNum) -> mapToFilm(rs), userId, friendId)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    private Film mapToFilm(ResultSet filmRows) throws SQLException {
+        return Film.builder()
+                .id(filmRows.getLong(ID))
+                .name(filmRows.getString(NAME))
+                .description(filmRows.getString(DESCRIPTION))
+                .releaseDate(filmRows.getDate(RELEASE_DATE).toLocalDate())
+                .duration(filmRows.getInt(DURATION))
+                .mpa(getMpaRatingById(filmRows.getLong(MPA_RATING_ID)).orElseThrow(MpaRatingNotFoundException::new))
+                .likes(new ArrayList<>())
+                .genres(getGenresByFilmId(filmRows.getLong(ID)))
+                .build();
+    }
+
+    private Genre mapToGenre(ResultSet genreRows) throws SQLException {
+        return Genre.builder()
+                .id(genreRows.getLong(GenreConstant.ID))
+                .name(genreRows.getString(GenreConstant.NAME))
+                .build();
     }
 
 }
