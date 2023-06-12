@@ -20,15 +20,6 @@ public class FriendshipService {
 
     private final UserService userService;
 
-    public Collection<Long> getFriendIdsByUserId(long userId) {
-        Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
-
-        return userService.getUsersByIds(friends)
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toSet());
-    }
-
     public Friendship addFriend(long userId, long friendId) {
         userService.getUserById(userId);
         userService.getUserById(friendId);
@@ -58,7 +49,7 @@ public class FriendshipService {
         return userService.getUsersByIds(friends);
     }
 
-    private static <T> Set<T> getCommonElements(Set<T> first, Set<T> second) {
+    protected static <T> Set<T> getCommonElements(Set<T> first, Set<T> second) {
         return first.stream().filter(second::contains).collect(Collectors.toSet());
     }
 }

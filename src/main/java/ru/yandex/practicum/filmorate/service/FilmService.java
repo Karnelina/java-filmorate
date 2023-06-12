@@ -57,6 +57,11 @@ public class FilmService {
         return film;
     }
 
+    public Collection<Film> getCommonFilms(long userId, long friendId) {
+
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
     private boolean isExist(long id) {
         return filmStorage.getFilmById(id).isPresent();
     }

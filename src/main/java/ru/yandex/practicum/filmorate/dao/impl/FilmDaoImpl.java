@@ -130,4 +130,22 @@ public class FilmDaoImpl implements FilmDao {
                 .findFirst();
     }
 
+    @Override
+    public Set<Film> getFilmsIdsByUserId(long userId, long friendId) {
+        String sqlToFilmsTable = "SELECT f.*\n" +
+                "FROM FILMS AS f\n" +
+                "WHERE f.FILM_ID IN (\n" +
+                "    SELECT FILM_ID\n" +
+                "    FROM FILM_LIKE AS fl\n" +
+                "    WHERE fl.USER_ID = ? OR fl.USER_ID = ?\n" +
+                "    GROUP BY fl.FILM_ID\n" +
+                "    HAVING COUNT(fl.FILM_ID) > 1\n" +
+                "    ORDER BY COUNT(fl.FILM_ID) DESC)";
+
+        return jdbcTemplate.query(sqlToFilmsTable, (rs, rowNum) -> mapToFilm(rs), userId, friendId)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
 }
