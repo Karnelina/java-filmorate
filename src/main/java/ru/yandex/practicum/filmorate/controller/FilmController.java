@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.DirectorService;
 import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FilmService;
+
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Map;
@@ -76,6 +77,13 @@ public class FilmController {
     @GetMapping("/popular")
     public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Integer count) {
         return filmLikeService.getMostPopularFilms(Objects.requireNonNullElse(count, 10));
+    }
+
+    @GetMapping(value = "/common", params = {"userId", "friendId"})
+    public Collection<Film> getCommonFilms(@RequestParam("userId") long userId,
+                                           @RequestParam("friendId") long friendId) {
+        log.info("запрос на получение общих с другом фильмов");
+        return filmService.getCommonFilms(userId, friendId);
     }
 
     @DeleteMapping("/{id}")

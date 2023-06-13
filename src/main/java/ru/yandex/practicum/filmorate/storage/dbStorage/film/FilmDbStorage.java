@@ -12,9 +12,11 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.director.DirectorDbStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.genre.GenreDbStorage;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Primary
@@ -79,6 +81,13 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
+    public Set<Film> getCommonFilms(long userId, long friendId) {
+        Set<Film> films = filmDao.getFilmsIdsByUserId(userId, friendId);
+
+        log.info("Количество фильмов: " + films.size());
+        return films;
+    }
+
     public Collection<Film> getFilmsDirectorSorted(Integer directorId, String sortBy) {
         return filmDao.getFilmsDirectorSorted(directorId, sortBy);
     }
@@ -87,4 +96,5 @@ public class FilmDbStorage implements FilmStorage {
     public Collection<Film> searchPopularFilmsByDirectorAndTitle(String query, String by) {
         return filmDao.searchPopularFilmsByDirectorAndTitle(query, by);
     }
+
 }

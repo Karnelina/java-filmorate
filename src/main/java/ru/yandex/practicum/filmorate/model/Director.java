@@ -1,10 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-import lombok.Getter;
-import lombok.Builder;
-import lombok.ToString;
+import lombok.*;
+
 import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor

@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -58,6 +59,11 @@ public class FilmService {
         }
         log.info("Фильм {} создан.", film.getName());
         return film;
+    }
+
+    public Collection<Film> getCommonFilms(long userId, long friendId) {
+
+        return filmStorage.getCommonFilms(userId, friendId);
     }
 
     private boolean isExist(long id) {

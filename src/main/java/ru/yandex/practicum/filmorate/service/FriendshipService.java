@@ -53,7 +53,7 @@ public class FriendshipService {
         throw new UserNotFoundException("Пользователь не существует");
     }
 
-    private static <T> Set<T> getCommonElements(Set<T> first, Set<T> second) {
+    protected static <T> Set<T> getCommonElements(Set<T> first, Set<T> second) {
         return first.stream().filter(second::contains).collect(Collectors.toSet());
     }
 }

@@ -21,10 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FilmConstant.*;
-import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_TITLE;
-import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_DIRECTOR;
-import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_DIRECTOR_TITLE;
-import static ru.yandex.practicum.filmorate.constant.SearchType.SEARCH_TITLE_DIRECTOR;
+import static ru.yandex.practicum.filmorate.constant.SearchType.*;
 
 @Slf4j
 @Component
@@ -157,6 +154,23 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
+    public Set<Film> getFilmsIdsByUserId(long userId, long friendId) {
+        String sqlToFilmsTable = "SELECT f.*\n" +
+                "FROM FILMS AS f\n" +
+                "WHERE f.FILM_ID IN (\n" +
+                "    SELECT FILM_ID\n" +
+                "    FROM FILM_LIKE AS fl\n" +
+                "    WHERE fl.USER_ID = ? OR fl.USER_ID = ?\n" +
+                "    GROUP BY fl.FILM_ID\n" +
+                "    HAVING COUNT(fl.FILM_ID) > 1\n" +
+                "    ORDER BY COUNT(fl.FILM_ID) DESC)";
+
+        return jdbcTemplate.query(sqlToFilmsTable, (rs, rowNum) -> mapToFilm(rs), userId, friendId)
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
     public Collection<Film> getFilmsDirectorSorted(Integer directorId, String sortBy) {
         String sqlToFilmTable = "";
         if (SortingConstant.LIKES_ASCENDING_ORDER.equals(sortBy)) {
@@ -224,4 +238,5 @@ public class FilmDaoImpl implements FilmDao {
         }
         return films.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
+
 }

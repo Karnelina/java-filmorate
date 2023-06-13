@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
-import java.util.Map;
-import java.util.HashMap;
+
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import static ru.yandex.practicum.filmorate.constant.DirectorConstant.DIRECTOR_TABLE;
-import static ru.yandex.practicum.filmorate.constant.DirectorConstant.NAME;
-import static ru.yandex.practicum.filmorate.constant.DirectorConstant.ID;
+
+import static ru.yandex.practicum.filmorate.constant.DirectorConstant.*;
 
 @Slf4j
 @Component
