@@ -77,7 +77,8 @@ public class ReviewDaoImpl implements ReviewDao {
                 review.getIsPositive(),
                 review.getReviewId());
         return (getReview(review.getReviewId()).orElseThrow(
-                () -> new ReviewNotFoundException("")));
+                () -> new ReviewNotFoundException(String.format(
+                        "Отзыв с ID %s не найден", review.getReviewId()))));
     }
 
     @Override

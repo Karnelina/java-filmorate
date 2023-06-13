@@ -36,7 +36,8 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public Review getReview(Long reviewId) {
         return reviewDao.getReview(reviewId).orElseThrow(
-                () -> new ReviewNotFoundException(""));
+                () -> new ReviewNotFoundException(String.format(
+                        "Отзыв с ID %s не найден", reviewId)));
     }
 
     @Override
@@ -47,7 +48,8 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public Optional<Review> getReviewById(Long reviewId) {
         return Optional.ofNullable(reviewDao.getReview(reviewId)).orElseThrow(
-                () -> new ReviewNotFoundException(""));
+                () -> new ReviewNotFoundException(String.format(
+                        "Отзыв с ID %s не найден", reviewId)));
     }
 
     @Override
