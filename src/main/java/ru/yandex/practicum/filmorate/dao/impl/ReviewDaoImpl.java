@@ -34,9 +34,8 @@ public class ReviewDaoImpl implements ReviewDao {
                             + "FROM REVIEWS R "
                             + "LEFT JOIN REVIEW_RATES AS RR on R.REVIEW_ID = RR.REVIEW_ID "
                             + "WHERE R.REVIEW_ID = ? "
-                            + "GROUP BY R.REVIEW_ID, R.FILM_ID, R.USER_ID, R.CONTENT, R.IS_POSITIVE"
-                    , reviewRowMapper()
-                    , reviewId));
+                            + "GROUP BY R.REVIEW_ID, R.FILM_ID, R.USER_ID, R.CONTENT, R.IS_POSITIVE", reviewRowMapper(),
+                    reviewId));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
