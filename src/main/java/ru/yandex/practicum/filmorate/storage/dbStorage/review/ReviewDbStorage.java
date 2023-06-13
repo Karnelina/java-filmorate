@@ -27,8 +27,8 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public List<Review> getAllReviews(Long count) {
-        List<Review> result = Optional.of(reviewDao.getReviews(count)).
-                orElse(new ArrayList<>());
+        List<Review> result = Optional.of(reviewDao.getReviews(count))
+                .orElse(new ArrayList<>());
         if (!result.isEmpty()) return result;
         return new ArrayList<>();
     }
@@ -41,7 +41,7 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public List<Review> findAllByFilmId(Long filmId, Long count) {
-        return reviewDao.getAllByFilmId(filmId,count);
+        return reviewDao.getAllByFilmId(filmId, count);
     }
 
     @Override
@@ -63,11 +63,11 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public void addReactionToReview(Long reviewId, Long userId, Long rate) {
-            reviewDao.addReviewReaction(reviewId,userId, rate);
+        reviewDao.addReviewReaction(reviewId, userId, rate);
     }
 
     @Override
     public void deleteRateFromReview(Long reviewId, Long userId) {
-reviewDao.removeReviewReaction(reviewId,userId);
+        reviewDao.removeReviewReaction(reviewId, userId);
     }
 }
