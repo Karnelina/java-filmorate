@@ -71,7 +71,12 @@ public class UserService {
         userStorage.deleteUser(id);
     }
 
-    public List<Event> getEvents(long id){
+    public List<Event> getEvents(long id) {
+        log.info("Получен запрос на ленту польщователя id=" + id);
+        if (!isExist(id)) {
+            log.error("Ошибка, пользователь не существует: " + id);
+            throw new UserNotFoundException("Пользователь не существует");
+        }
         return eventStorage.getEvents(id);
     }
 

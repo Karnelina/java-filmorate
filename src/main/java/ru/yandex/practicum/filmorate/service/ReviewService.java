@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ReviewAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exception.ReviewNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.dbStorage.event.EventDbStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.review.ReviewStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
@@ -21,6 +22,7 @@ public class ReviewService {
     private final ReviewStorage reviewStorage;
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
+    private final EventDbStorage eventDbStorage;
 
     public Review addNewReview(Review review) {
         filmStorage.getFilmById(review.getFilmId()).orElseThrow(
@@ -29,18 +31,24 @@ public class ReviewService {
         userStorage.getUserById(review.getUserId()).orElseThrow(
                 () -> new UserNotFoundException(String.format(
                         "Пользователь с ID %s не найден", review.getUserId())));
-        return reviewStorage.addNewReview(review).orElseThrow(
+        Review addedReview = reviewStorage.addNewReview(review).orElseThrow(
                 () -> new ReviewAlreadyExistsException(String.format(
                         "Отзыв с ID %s уже существует", review.getReviewId())));
+        eventDbStorage.addEvent(addedReview.getUserId(), addedReview.getReviewId(), "REVIEW", "ADD");
+        return addedReview;
     }
 
     public Review updateReview(Review review) {
         reviewStorage.getReviewById(review.getReviewId()).orElseThrow(() -> new ReviewNotFoundException(String.format(
                 "Отзыв с ID %s не найден", review.getReviewId())));
-        return reviewStorage.updateReview(review).get();
+        Review newReview = reviewStorage.updateReview(review).get();
+        eventDbStorage.addEvent(newReview.getUserId(), newReview.getReviewId(), "REVIEW", "UPDATE");
+        return newReview;
     }
 
     public void deleteReview(Long reviewId) {
+        eventDbStorage.addEvent(reviewStorage.getReviewById(reviewId).get().getUserId(), reviewId, "REVIEW",
+                "REMOVE");
         reviewStorage.deleteReview(reviewId);
     }
 
@@ -57,7 +65,7 @@ public class ReviewService {
             filmStorage.getFilmById(filmId).orElseThrow(
                     () -> new FilmNotFoundException(String.format(
                             "Фильм с ID %s не найден", filmId)));
-            return reviewStorage.findAllByFilmId(filmId,count);
+            return reviewStorage.findAllByFilmId(filmId, count);
         }
     }
 
